@@ -63,6 +63,7 @@ const UsersController = (app) => {
   };
 
   const login = async (req, res) => {
+    console.log("sid");
     const credentials = req.body;
     const existingUser = await userDao.findUserByCredentials(
       credentials.email,

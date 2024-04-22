@@ -19,14 +19,14 @@ const options = {
   family: 4, // Use IPv4, skip trying IPv6
 };
 
-const FRONTEND_URL_NETLIFY = 'https://main--sideesh-webdev.netlify.app/';
-const FRONTEND_URL = 'http://localhost:3000/';
-const FRONT_END_STRING = FRONTEND_URL_NETLIFY || FRONTEND_URL;
+const FRONTEND_URL_NETLIFY = 'https://main--sideesh-webdev.netlify.app';
+const FRONTEND_URL = 'http://localhost:3000';
+const FRONT_END_STRING = FRONTEND_URL_NETLIFY;
 
 mongoose
   .connect(
-    "mongodb+srv://sideesh:pavitasree@cluster-kanbas.x2jtkqg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Kanbas",
-    {dbName: 'webdevFinalProject'}
+    "mongodb+srv://sideesh:pavitasree@cluster-kanbas.x2jtkqg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Kanbas/webdevFinalProject",
+    options
   )
   .catch((error) => {
     console.log("Error thrown while trying to connect to db", error);
