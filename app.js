@@ -20,7 +20,7 @@ const options = {
 
 mongoose
   .connect(
-    "mongodb://localhost:27017/webdevProject",
+    "mongodb+srv://sideesh:pavitasree@cluster-kanbas.x2jtkqg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Kanbas/webdevProject",
     options
   )
   .catch((error) => {
