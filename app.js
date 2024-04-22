@@ -6,7 +6,8 @@ import LikesController from "./likes/likes-controller.js";
 import UsersController from "./users/users-controller.js";
 import StocksController from "./stocks/stock-controller.js";
 import CommentsController from "./comments/comments-controller.js";
-import BookMarksController from "./bookmarks/bookmarks-controller.js"
+import BookMarksController from "./bookmarks/bookmarks-controller.js";
+import "dotenv/config";
 
 const options = {
   useNewUrlParser: true,
@@ -18,25 +19,43 @@ const options = {
   family: 4, // Use IPv4, skip trying IPv6
 };
 
+const FRONTEND_URL_NETLIFY = 'https://main--sideesh-webdev.netlify.app/';
+const FRONTEND_URL = 'http://localhost:3000/';
+const FRONT_END_STRING = FRONTEND_URL_NETLIFY || FRONTEND_URL;
+
 mongoose
   .connect(
-    "mongodb+srv://sideesh:pavitasree@cluster-kanbas.x2jtkqg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Kanbas/webdevProject",
-    options
+    "mongodb+srv://sideesh:pavitasree@cluster-kanbas.x2jtkqg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Kanbas",
+    {dbName: 'webdevFinalProject'}
   )
   .catch((error) => {
     console.log("Error thrown while trying to connect to db", error);
     throw error;
   });
-let sess = {
-  secret: "Secret",
-  resave: false,
-  saveUninitialized: true,
-};
-const app = express();
-app.use(cors());
 
-app.use(session(sess));
+
+const sessionOptions = {
+secret: "sidkey",
+resave: false,
+saveUninitialized: false,
+};
+
+if (process.env.NODE_ENV !== "development") {
+sessionOptions.proxy = true;
+sessionOptions.cookie = {
+  sameSite: "none",
+  secure: true,
+};
+}
+const app = express();
 app.use(express.json());
+app.use(cors({
+  credentials: true,
+  origin: FRONT_END_STRING
+}));
+
+app.use(session(sessionOptions));
+
 StocksController(app);
 LikesController(app);
 UsersController(app);
