@@ -45,13 +45,15 @@ sessionOptions.proxy = true;
 sessionOptions.cookie = {
   sameSite: "none",
   secure: true,
+  https:"webdev-final-node-server-app-c2395a348e63.herokuapp.com"
 };
 }
 const app = express();
 app.use(express.json());
 app.use(cors({
   credentials: true,
-  origin: FRONT_END_STRING
+  origin: FRONT_END_STRING,
+  domain: ""
 }));
 
 app.use(session(sessionOptions));
