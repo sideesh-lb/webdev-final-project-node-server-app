@@ -45,7 +45,7 @@ sessionOptions.proxy = true;
 sessionOptions.cookie = {
   sameSite: "none",
   secure: true,
-  https:"webdev-final-node-server-app-c2395a348e63.herokuapp.com"
+  domain: "webdev-final-node-server-app-c2395a348e63.herokuapp.com"
 };
 }
 const app = express();
