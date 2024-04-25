@@ -20,7 +20,8 @@ const UsersController = (app) => {
     if(existingUser)
     {
       await userDao.updateUser(updatedUser.email,updatedUser)
-      res.status(201).send({message:"Updated User",updatedUser:updatedUser});
+      req.session["currentUser"] = updatedUser;
+      res.status(201).send({message:"Updated User",updatedUser:req.session["currentUser"]});
     }
     else 
     res.send({message:"No User"});
@@ -32,10 +33,10 @@ const UsersController = (app) => {
     const email= req.body.email;
     const bookMark= req.body.bookMark;
    
-    const existingUser = await userDao.findUserByUsername(email);
+    const existingUser = await userDao.findUserByUsername(res.session["currentUser"]);
     if(existingUser)
     {
-      await userDao.addBookMark(email,bookMark)
+      await userDao.addBookMark(existingUser.email,bookMark)
       res.status(201).send({message:"Added Bookmark"});
     }
     else 
@@ -57,13 +58,13 @@ const UsersController = (app) => {
       return;
     }
     const currentUser = await userDao.createUser(user);
+    req.session["currentUser"] = currentUser;
     // req.session['currentUser'] = currentUser
 
     res.status(200).send({ message: "Success", userDetail: currentUser });
   };
 
   const login = async (req, res) => {
-    console.log("sid");
     const credentials = req.body;
     const existingUser = await userDao.findUserByCredentials(
       credentials.email,
@@ -71,7 +72,7 @@ const UsersController = (app) => {
     );
     if (existingUser) {
       console.log("Inside Login : Existing user is :", existingUser)
-      req.session['profile'] = existingUser;
+      req.session["currentUser"] = existingUser;
       res.status(200).send({ message: "Logged In", userDetail: existingUser });
       return;
     } else
@@ -86,10 +87,11 @@ const UsersController = (app) => {
     res.sendStatus(200);
   };
 
-  const profile = (req, res) => {
-    console.log("The current user session is :", req.session)
-    if (req.session["profile"]) {
-      res.send(req.session["profile"]);
+  const profile = async (req, res) => {
+    console.log("The current user session is :", req.session["currentUser"])
+    if (req.session["currentUser"]) {
+      console.log("in here")
+      res.json(req.session["currentUser"]);
     } else {
       //console.log("Inside the else. Request is :", req)
       res.sendStatus(403);
@@ -117,7 +119,7 @@ const UsersController = (app) => {
   app.post("/sign-up", register);
   app.post("/login", login);
   app.post("/logout", logout);
-  app.post("/profile", profile);
+  app.get("/profile", profile);
 };
 
 export default UsersController;
